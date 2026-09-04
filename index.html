@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NIKKEのSkill Lv.10バフをキャラクターごとに比較。Raw Valueとスキル由来を確認するバフ辞典。" />
+  <title>NIKKE Buff Atlas — バフ比較辞典</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div><div class="eyebrow"><span class="pulse"></span> RAW SKILL LV.10</div><h1>NIKKE <span>BUFF</span> ATLAS</h1></div>
+      <div class="hero-caption"><p>バフの数値を比較。由来はクリックで確認。</p><a href="formation.html">Formation · 編成で確認 ↗</a> · <a href="review.html">Review · 確認待ちを整理 ↗</a> · <a href="#method">表示ルール ↗</a></div>
+    </header>
+    <aside class="raw-notice">All values are raw Skill Lv.10 values. Actual effectiveness may vary depending on character stats, conditions, and game mechanics.</aside>
+    <section class="summary" aria-label="データ概要">
+      <span><strong id="character-count">0</strong> キャラクター</span><span><strong id="record-count">0</strong> 効果</span><span><strong id="category-count">0</strong> 収録カテゴリ</span>
+      <span class="summary-note">Raw Valueのみ・効果は合算しません</span>
+    </section>
+
+    <section class="control-panel" aria-label="バフ比較フィルター">
+      <div class="mode-tabs" role="group" aria-label="自己・味方の切り替え">
+        <button class="mode active" data-mode="all" aria-pressed="true">すべて</button>
+        <button class="mode" data-mode="self" aria-pressed="false"><i class="dot self-dot"></i>SELF</button>
+        <button class="mode" data-mode="allies" aria-pressed="false"><i class="dot ally-dot"></i>ALLY</button>
+      </div>
+      <label class="search-field"><span aria-hidden="true">⌕</span><input id="name-search" type="search" aria-label="キャラクター名検索" placeholder="キャラクター名を検索" autocomplete="off" /></label>
+      <label class="select-wrap"><span class="sr-only">比較・並び替え対象のバフ</span><select id="type-filter"><option value="">比較するバフを選択</option></select></label>
+      <label class="select-wrap"><span class="sr-only">企業</span><select id="manufacturer-filter"><option value="">企業：すべて</option></select></label>
+      <label class="select-wrap"><span class="sr-only">Burst Stage</span><select id="burst-filter"><option value="">Burst：すべて</option><option value="1">Burst I</option><option value="2">Burst II</option><option value="3">Burst III</option></select></label>
+      <label class="select-wrap"><span class="sr-only">属性</span><select id="element-filter"><option value="">属性：すべて</option></select></label>
+      <label class="select-wrap"><span class="sr-only">並び替え</span><select id="sort-select" aria-describedby="sort-hint"></select></label>
+      <details id="advanced-filters" class="advanced-filters">
+        <summary>詳細フィルター <span id="advanced-count" hidden></span><span aria-hidden="true">⌄</span></summary>
+        <div class="advanced-panel">
+          <label>対象タイプ<select id="target-filter"><option value="">すべて</option><option value="self">自分専用</option><option value="all_allies">味方全員</option><option value="selected_allies">選択された味方</option><option value="class">クラス限定</option><option value="weapon">武器種限定</option><option value="element">属性限定</option><option value="other">その他</option></select></label>
+          <label>スキル<select id="slot-filter"><option value="">すべて</option><option value="Skill 1">スキル1</option><option value="Skill 2">スキル2</option><option value="Burst">バースト</option></select></label>
+          <label>条件付き<select id="condition-filter"><option value="include">含める</option><option value="exclude">除外</option><option value="only">条件付きのみ</option></select></label>
+          <label>スタック型<select id="stack-filter"><option value="include">含める</option><option value="exclude">除外</option><option value="only">スタック型のみ</option></select></label>
+          <label class="matching-filter"><input id="only-matching" type="checkbox" checked disabled />選択したバフを持つキャラだけ表示</label>
+          <button id="reset-advanced" type="button">詳細フィルターをリセット</button>
+        </div>
+      </details>
+    </section>
+
+    <div class="filter-state-bar"><span id="filter-count">フィルターなし</span><div id="active-filters" class="active-filters" aria-label="現在のフィルター"></div><button id="clear-filters" type="button">すべて解除</button></div>
+    <details class="coverage"><summary id="coverage-summary">収録状況・確認待ちについて</summary><p id="coverage-note"></p><p>元一覧にない新キャラや未解析の効果は比較対象外です。検索結果が0件でも、ゲーム内で該当バフが存在しないとは限りません。実装日不明は推測せず、実装順では末尾に表示します。</p></details>
+
+    <section class="results-header">
+      <div class="results-status" role="status"><p><strong id="visible-count">0</strong> キャラクター <span id="sort-hint">並び替え中：キャラクター名（昇順）</span></p><p id="comparison-hint">バフを選択すると、そのバフを持つキャラを先頭に表示します。</p></div>
+      <div class="legend"><span><i class="dot self-dot"></i>自分専用</span><span><i class="dot ally-dot"></i>味方に配る</span></div>
+    </section>
+    <section class="comparison-list" aria-label="キャラクター別バフ比較">
+      <div class="comparison-columns" aria-hidden="true"><span>キャラクター</span><span>バフ一覧 <small>所有バフのみ · 行をクリックして詳細</small></span></div>
+      <ul id="character-list" class="character-list"></ul>
+    </section>
+    <div id="empty-state" class="empty-state" hidden><p>条件に合うキャラクターがありません。</p><button id="reset-all" type="button">すべての条件をリセット</button></div>
+
+    <details id="method" class="method">
+      <summary>表示ルール・データについて</summary>
+      <p>各行は同じカテゴリ・SELF / ALLY・単位の効果をまとめ、効果単体の最大Raw Valueを表示します。スタック型は1スタックの値と最大スタック時のRaw Valueを併記します。実効DPSや維持率は計算しません。</p>
+      <p>攻撃力、発動者基準 攻撃力、攻撃ダメージは別カテゴリです。自分を含む味方全体バフも、SELFへ重複させずALLYに表示します。効果数と代表値にはSELF / ALLY・対象・スキル・条件・スタックのフィルターが適用されます。</p>
+      <p>比較対象のバフを選択すると、標準ではそのバフを持つキャラだけに絞ります。他の所有バフは一覧に残し、対象バフを強調します。数値は選択カテゴリ・単位ごとに並べ、別カテゴリの値は混ぜません。詳細フィルターで非所持キャラも表示できます。企業・Burst・属性・SELF/ALLYなどはAND条件です。</p>
+      <p>ABC順は英語名、実装順は確認済み実装日を使います。同日はrelease_orderで安定させ、未確認日は昇順・降順とも末尾です。フィルターと並び順はURLに保存します。ローカルURLを別端末で開くには同じサイトを配信する必要があります。</p>
+      <p>キャラクター情報と効果データはcharacter_idで関連付けています。公開一覧から取得したLv.10スキル文のうち、明確な文型だけを自動抽出しています。未対応の分岐や単位は確認待ちとし、比較値を推測しません。確認待ちがあるキャラは未収録バフがある場合があります。</p>
+      <p>NIKKE.GGを優先し、Skill 1 / Skill 2 / BurstごとにLv.10の原文が欠けている場合のみNikke Explorerで補完します。分類未対応だけを理由にソースは切り替えません。両ソースの数値不一致や照合できない記述は記録し、確認まで数値比較から除外します。</p>
+      <p>詳細では各effectの対象・持続・条件・原文・参照元・確認日を確認できます。日本語は表示用ラベルで、保存済みのスキル文・値は変更しません。</p>
+      <p id="dataset-version" class="dataset-version">Parser: <code id="parser-version">—</code> · Characters: <code id="dataset-character-count">—</code> · Comparison effects: <code id="dataset-effect-count">—</code> · Generated: <code id="dataset-generated-at">—</code></p>
+    </details>
+    <footer>NIKKE.GGを優先し、欠損スキルはNikke Explorerで補完する非公式バフ辞典。ゲーム更新により値が変更される場合があります。</footer>
+  </main>
+
+  <dialog id="character-drawer" class="drawer" aria-labelledby="drawer-title" aria-describedby="drawer-description">
+    <header class="drawer-header"><div><p class="eyebrow">スキル由来・効果の内訳</p><h2 id="drawer-title"></h2><p id="drawer-description"></p></div><button id="close-drawer" class="close-button" type="button" aria-label="詳細を閉じる" autofocus>×</button></header>
+    <p class="drawer-context">現在のフィルターに一致する効果を表示。数値は合算しません。</p>
+    <dl id="drawer-metadata" class="character-metadata"></dl>
+    <div class="metadata-sources"><a id="drawer-character-source" class="source-link" target="_blank" rel="noopener noreferrer">NIKKE.GG キャラクター情報 ↗</a><a id="drawer-explorer-source" class="source-link" target="_blank" rel="noopener noreferrer">Nikke Explorer キャラクター情報 ↗</a><a id="drawer-release-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden>実装日の出典 ↗</a></div>
+    <p id="drawer-review-status" class="review-status"></p>
+    <div id="drawer-effects" class="effect-list"></div>
+    <div id="drawer-reviews"></div>
+  </dialog>
+
+  <template id="character-template"><li><button type="button" class="character-row" aria-haspopup="dialog" aria-controls="character-drawer"><span class="character-identity"><span class="character-portrait" aria-hidden="true"></span><span class="character-identity-text"><span class="character-name"></span><span class="effect-total"></span><span class="match-note" hidden>選択バフなし</span></span><span class="expand-hint">詳細 <span aria-hidden="true">↗</span></span></span><span class="buff-rows"></span></button></li></template>
+  <template id="effect-template"><article class="effect-detail"><div class="effect-heading"><span class="detail-type"></span><span class="detail-relation"></span><strong class="detail-value"></strong></div><p class="detail-unit"></p><p class="detail-stack"></p><dl class="effect-meta"><div><dt>スキル</dt><dd class="detail-skill"></dd></div><div><dt>対象</dt><dd class="detail-target"></dd><small class="detail-target-meta"></small></div><div><dt>持続時間</dt><dd class="detail-duration"></dd></div><div><dt>発動</dt><dd class="detail-trigger"></dd></div><div class="wide"><dt>条件</dt><dd class="detail-condition"></dd></div><div class="wide detail-scaling-row"><dt>Scaling / Raw Value基準</dt><dd class="detail-scaling"></dd></div><div class="wide detail-periodic-row"><dt>周期</dt><dd class="detail-periodic"></dd></div><div class="wide detail-section-row"><dt>Section condition</dt><dd class="detail-section-condition"></dd></div><div class="wide detail-limitations-row"><dt>Source limitations</dt><dd class="detail-limitations"></dd></div></dl><p class="detail-source-conflict" hidden></p><p class="detail-notes"></p><details class="source-text"><summary>参照元のスキル文</summary><p class="detail-source-text" lang="en"></p></details><a class="source-link" target="_blank" rel="noopener noreferrer"></a><span class="source-checked-at"></span></article></template>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

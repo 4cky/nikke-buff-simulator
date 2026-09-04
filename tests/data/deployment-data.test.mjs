@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {readFile,mkdtemp,rm} from 'node:fs/promises';import {join} from 'node:path';import {tmpdir} from 'node:os';
+import {artifactHash,buildStatic} from '../../scripts/build.mjs';
+import {inspectProductionGate} from '../../scripts/deployment-gate.mjs';
+
+test('hosted review is read-only without probing a missing API',async()=>{const source=await readFile('review.js','utf8');assert.match(source,/const api=localReviewHost\?.*:null/);assert.match(source,/if\(!api\)throw Error\('Hosted review is intentionally read-only'\)/);});
+test('Sites worker routes static assets and prevents mixed stale datasets',async()=>{const source=await readFile('scripts/build.mjs','utf8');assert.match(source,/env\?\.ASSETS\?\.fetch/);assert.match(source,/CDN-Cache-Control/);assert.match(source,/no-cache, must-revalidate/);assert.match(source,/review\.html/);});
+test('production gate matches stable v4.2.2 boundary',async()=>{const result=await inspectProductionGate({deploymentPath:null});assert.equal(result.ok,true,result.errors.join('\n'));assert.deepEqual(result.counts,{characters:199,comparison:991,excluded:400,review:1,unknown:0,positive:0,buff:898,heal:90,revive:3});});
+test('build emits a reproducible deployment manifest',async()=>{const dir=await mkdtemp(join(tmpdir(),'nikke-deploy-'));try{await buildStatic({outDir:dir});const manifest=JSON.parse(await readFile(join(dir,'deployment-manifest.json'),'utf8'));assert.equal(manifest.parser_version,'4.2.2');assert.equal(manifest.character_count,199);assert.equal(manifest.comparison_effect_count,991);assert.equal(manifest.excluded_count,400);assert.equal(manifest.review_count,1);assert.equal(manifest.artifact_hash,await artifactHash(dir));}finally{await rm(dir,{recursive:true,force:true});}});

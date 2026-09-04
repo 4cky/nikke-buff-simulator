@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NIKKE formation builder: resolve raw Skill Lv.10 buffs per member. No effective values are calculated." />
+  <title>NIKKE Buff Atlas — Formation</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="formation.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div><div class="eyebrow"><span class="pulse"></span> RAW SKILL LV.10</div><h1>FORMATION <span>VIEW</span></h1></div>
+      <div class="hero-caption"><p>Raw buffs per formation member. No effective values.</p><a href="index.html">Comparison ↗</a> · <a href="review.html">Review ↗</a></div>
+    </header>
+    <aside class="raw-notice">Structural application only. needs_review effects are never applied. Timing, uptime and DPS are not simulated.</aside>
+
+    <section class="formation-slots" aria-label="Formation members">
+      <ol id="formation-slots" class="formation-strip"></ol>
+      <p class="formation-hint">Drag portraits into slots 1–5, drag between slots to swap, or drop on the remove bin. Tap a portrait to add; tap a filled slot to set the target.</p>
+      <div id="remove-bin" class="remove-bin" aria-label="Remove zone: drop a formation member here to remove it">Drop here to remove</div>
+    </section>
+
+    <section class="roster" aria-label="Character roster">
+      <div class="roster-filters" aria-label="Roster filters">
+        <label class="search-field"><span aria-hidden="true">⌕</span><input id="roster-search" type="search" aria-label="Filter roster" placeholder="Filter roster" autocomplete="off" /></label>
+        <label class="select-wrap"><span class="sr-only">Manufacturer</span><select id="roster-manufacturer" aria-label="Manufacturer"><option value="">Manufacturer: all</option></select></label>
+        <label class="select-wrap"><span class="sr-only">Burst Stage</span><select id="roster-burst" aria-label="Burst Stage"><option value="">Burst: all</option><option value="1">Burst I</option><option value="2">Burst II</option><option value="3">Burst III</option></select></label>
+        <label class="select-wrap"><span class="sr-only">Element</span><select id="roster-element" aria-label="Element"><option value="">Element: all</option></select></label>
+        <label class="select-wrap"><span class="sr-only">Class</span><select id="roster-class" aria-label="Class"><option value="">Class: all</option></select></label>
+        <label class="select-wrap"><span class="sr-only">Weapon</span><select id="roster-weapon" aria-label="Weapon"><option value="">Weapon: all</option></select></label>
+        <label class="select-wrap"><span class="sr-only">Rarity</span><select id="roster-rarity" aria-label="Rarity"><option value="">Rarity: all</option></select></label>
+        <button id="roster-clear" type="button">Clear filters</button>
+        <span id="roster-count" class="roster-count" role="status"></span>
+      </div>
+      <ol id="character-roster" class="roster-grid"></ol>
+    </section>
+
+    <section class="target-panel" aria-label="Target and Burst">
+      <button id="panel-toggle" type="button" hidden>Effects on Target</button>
+      <button id="formation-clear" type="button">Clear formation</button>
+      <span id="formation-counts" class="formation-meta" role="status"></span>
+    </section>
+
+    <div id="panel-backdrop" class="panel-backdrop" hidden></div>
+    <aside id="effect-panel" class="effect-panel" aria-label="Effects on target">
+      <div class="panel-head">
+        <div class="target-display"><span class="target-label">Target</span><strong id="panel-target-name">No target</strong><span id="panel-target-meta" class="formation-meta"></span></div>
+        <button id="panel-close" type="button" aria-label="Close effects panel">×</button>
+      </div>
+      <div class="panel-block">
+        <span class="panel-label" id="rotation-label">Burst Rotation</span>
+        <p class="rotation-hint">Who fires in which order, inside the 5 members. Select a position to evaluate it.</p>
+        <div id="rotation-info" class="formation-meta" role="status"></div>
+        <ol id="burst-rotation" class="rotation-list" role="group" aria-labelledby="rotation-label"></ol>
+      </div>
+      <div class="panel-block" id="coverage-block">
+        <span class="panel-label">Buff Axis Coverage</span>
+        <p id="coverage-summary" class="formation-meta" role="status"></p>
+        <div id="axis-coverage"></div>
+      </div>
+      <div class="panel-block" id="member-axes-block">
+        <span class="panel-label">Member axes on target</span>
+        <div id="member-axes"></div>
+      </div>
+      <h2 class="effects-title">Effects on Target</h2>
+      <h3>Deterministic <small id="count-deterministic">0</small></h3>
+      <ul id="list-deterministic" class="formation-list"></ul>
+      <h3>Conditional / gated <small id="count-gated">0</small></h3>
+      <ul id="list-gated" class="formation-list"></ul>
+      <h3>Unknown <small id="count-unknown">0</small></h3>
+      <ul id="list-unknown" class="formation-list"></ul>
+      <details id="quarantined-wrap"><summary>Quarantined (needs_review, never applied) <small id="count-quarantined">0</small></summary><ul id="list-quarantined" class="formation-list"></ul></details>
+    </aside>
+    <div id="formation-empty" class="empty-state" hidden><p>Loading dataset…</p></div>
+    <footer>Raw Skill Lv.10 resolution only. Unresolved effects are listed, never applied.</footer>
+  </main>
+  <script type="module" src="formation.js"></script>
+</body>
+</html>

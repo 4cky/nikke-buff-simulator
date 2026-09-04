@@ -1,0 +1,35 @@
+# Dependencies and package caches
+node_modules/
+.pnpm-store/
+
+# Build output (regenerate with npm run build)
+dist/
+
+# Collected source data: NIKKE.GG / Nikke Explorer mirrors and working files.
+# Not published. Regenerate locally with npm run collect, or use the
+# synthetic demo dataset via node scripts/seed-demo-data.mjs.
+work/
+outputs/
+
+# Hosting environment metadata
+.openai/
+
+# Generated datasets derived from third-party sources (see README data policy).
+# Kept locally; regenerate with npm run collect. Schemas, manual inputs and
+# fixtures stay tracked (see negations below).
+data/*
+!data/character-schema.json
+!data/effect-schema.json
+!data/schema.json
+!data/buffs.json
+!data/character-overrides.json
+!data/reviewed-skills.json
+!data/review-decisions.json
+
+# Direct page scraper (superseded review aid; not part of the pipeline)
+scripts/nikke-gg-extract.mjs
+
+# OS and editor noise
+*.log
+.DS_Store
+Thumbs.db

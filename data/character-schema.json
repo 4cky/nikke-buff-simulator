@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","title":"NIKKE character metadata","type":"object",
+  "required":["character_id","character_name","manufacturer","burst_stage","element","weapon_type","class","rarity","release_order","release_date","nikke_gg_url","nikke_explorer_url","needs_review"],
+  "properties":{
+    "character_id":{"type":"string","pattern":"^nikke-[0-9]+$"},"character_name":{"type":"string","minLength":1},
+    "manufacturer":{"enum":["Elysion","Missilis","Tetra","Pilgrim","Abnormal",null]},
+    "burst_stage":{"type":"array","uniqueItems":true,"items":{"enum":[1,2,3]}},
+    "element":{"enum":["Fire","Water","Wind","Electric","Iron",null]},"weapon_type":{"enum":["AR","SR","SG","SMG","MG","RL",null]},
+    "class":{"enum":["Attacker","Supporter","Defender",null]},"rarity":{"enum":["R","SR","SSR",null]},
+    "release_order":{"type":["integer","null"],"minimum":1},"release_date":{"type":["string","null"],"format":"date"},
+    "nikke_gg_url":{"type":["string","null"],"format":"uri"},"nikke_explorer_url":{"type":["string","null"],"format":"uri"},"release_source_url":{"type":"string","format":"uri"},
+    "availability":{"enum":["limited","permanent",null]},"limited":{"type":["boolean","null"]},"collab":{"type":["boolean","null"]},"alt_character":{"type":["boolean","null"]},
+    "effect_review_status":{"enum":["needs_review","complete"]},"release_date_review_status":{"enum":["verified","needs_review"]},"metadata_review_status":{"enum":["complete","needs_review"]},
+    "effect_needs_review":{"type":"boolean"},"release_date_needs_review":{"type":"boolean"},
+    "needs_review":{"type":"boolean"},"review_fields":{"type":"array","items":{"type":"string"}},
+    "effects_status":{"enum":["curated","rule_matched","partial","needs_review"]}
+  }
+}

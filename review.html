@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NIKKE Buff Atlas — Review</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="review.css"></head>
+<body><main class="shell review-shell">
+  <header class="hero"><div><div class="eyebrow">SKILL LV.10 / HUMAN REVIEW</div><h1>BUFF <span>REVIEW</span></h1></div><a href="index.html">← バフ比較へ戻る</a></header>
+  <p class="review-intro">原文と候補を並べて確認。確認理由は重複するため、カテゴリ件数の合計は節数と一致しません。実装日の確認待ちはこの画面に含みません。</p>
+  <div id="review-connection" role="status">確認データを読み込み中…</div>
+  <section id="review-summary" class="review-metrics" aria-label="確認状況"></section>
+  <section id="review-categories" class="review-categories" aria-label="確認理由ごとの件数"></section>
+  <details class="method unknown-candidates">
+    <summary>未分類の効果名候補 · 全スキル原文の頻度集計</summary>
+    <p>自動的にbuff_typeは追加しません。バフ候補と、ダメージ等の対象外候補を分けて原文を確認できます。件数は選択済みソースの子効果単位（同じ文の両ソース重複なし）です。</p>
+    <section id="reclassification-summary" class="review-metrics" aria-label="再分類結果"></section>
+    <div class="review-controls"><label>候補を検索<input id="unknown-search" type="search" placeholder="効果名・キャラ名"></label><label><input id="unknown-include-nonbuff" type="checkbox"> ダメージ等の対象外・特殊候補も表示</label></div>
+    <p id="unknown-summary" role="status">集計を読み込み中…</p><div id="unknown-list"></div><button id="unknown-more" type="button" hidden>さらに25種類表示</button>
+  </details>
+  <details class="method unknown-candidates" open>
+    <summary>未登録の有益effect候補 · Positive Effect Audit</summary>
+    <p>▲ / Gains / Restores / Removes / Re-enters / Reload 等の肯定表現を全Skill Lv.10原文から監査し、構造化済みeffectsと比較して未認識の文だけを表示します。</p>
+    <p id="positive-summary" role="status">監査結果を読み込み中…</p><div id="positive-list"></div>
+  </details>
+  <div class="review-controls">
+    <label>検索<input id="review-search" type="search" placeholder="キャラ名・スキル名"></label>
+    <label>確認状態<select id="review-status"><option value="pending">未確認＋保留</option><option value="all">すべて</option><option value="auto_excluded">自動除外</option><option value="auto_extracted">バフ部分を抽出済み</option><option value="approved">承認済み</option><option value="edited">編集・承認済み</option><option value="excluded">人間が除外</option><option value="hold">保留のみ</option></select></label>
+    <label>確認者（自己申告）<input id="reviewer-name" maxlength="100" placeholder="名前・ハンドルネーム" autocomplete="name"></label>
+    <button id="review-refresh" type="button">再読み込み</button>
+    <button id="review-reset" type="button">条件解除</button>
+  </div>
+  <div class="review-bulk"><label><input id="select-page" type="checkbox"> このページの対象外候補を選択</label><span id="selected-count">0件選択</span><button id="bulk-exclude" type="button" disabled>選択したものを比較対象外として承認</button><button id="clear-selection" type="button">選択解除</button></div>
+  <div class="review-list-heading"><p id="review-count" role="status"></p><span>優先度順 · 原文にない値を推測しません</span></div>
+  <section id="review-list" aria-label="確認項目"></section>
+  <nav class="review-pagination" aria-label="ページ切り替え"><button id="previous-page" type="button">前へ</button><span id="page-status"></span><button id="next-page" type="button">次へ</button></nav>
+  <details class="method"><summary>確認操作とデータ保護</summary><p>Approveは提示された候補をそのまま承認、Editは効果を編集して承認、Excludeはこの節を比較対象外、Holdは保留にします。候補がない／必須値が不明な場合はEditまたはHoldを使用してください。</p><p>保存はアプリ側のファイルへ行います。承認・編集・除外はmanual_overrideで保護され、再取得や自動解析で上書きしません。原文が変わっても判断は維持し、「原文変更あり」を別に表示します。確認者名は自己申告で、アカウント認証ではありません。</p><p>階層解析では親Mode全体ではなく子Effectごとに判定し、確定したバフだけを比較へ反映します。HP消費・ダメージ・回復等の子は比較対象外データへ分離し、親子関係と原文を保持します。親の条件が不明な場合は子もReviewに残します。未知のカテゴリを自動追加することはありません。</p></details>
+</main>
+<dialog id="review-dialog" class="review-dialog" aria-labelledby="action-title">
+  <form id="review-form"><header><h2 id="action-title"></h2><button id="close-review-dialog" type="button" aria-label="閉じる">×</button></header>
+    <p id="action-description"></p><p id="action-warning" class="review-warning"></p>
+    <div id="edit-effects"></div><button id="add-effect" type="button" hidden>＋ バフ効果を追加</button>
+    <label class="review-note-label">確認メモ<textarea id="review-note" rows="3" maxlength="4000" placeholder="判断理由、除外した部分、参照した箇所など"></textarea></label>
+    <label id="confirmation-label" class="review-confirm"><input id="action-confirmation" type="checkbox"> 原文・候補を確認しました。この節の比較対象は承認する効果のみとし、残りは比較に含めません。</label>
+    <p id="action-error" role="alert"></p><footer><button id="cancel-review" type="button">キャンセル</button><button id="save-review" type="submit">保存</button></footer>
+  </form>
+</dialog>
+<script type="module" src="review.js"></script></body></html>
