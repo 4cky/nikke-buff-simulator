@@ -1,5 +1,6 @@
 {
   "parser_version": "4.2.2",
+  "demo": true,
   "generated_at": "2026-09-04T00:00:00.000Z",
   "character_count": 3,
   "comparison_count": 4,
