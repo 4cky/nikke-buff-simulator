@@ -14,15 +14,22 @@
       <div><div class="eyebrow"><span class="pulse"></span> RAW SKILL LV.10</div><h1>FORMATION <span>VIEW</span></h1></div>
       <div class="hero-caption"><p>Raw buffs per formation member. No effective values.</p><a href="index.html">Comparison ↗</a> · <a href="review.html">Review ↗</a></div>
     </header>
+    <nav class="site-nav" aria-label="ページ切り替え">
+      <a href="index.html">Comparison · バフ比較</a>
+      <a href="formation.html" aria-current="page">Formation · 編成</a>
+      <a href="review.html">Review · 確認待ち</a>
+    </nav>
     <aside class="raw-notice">Structural application only. needs_review effects are never applied. Timing, uptime and DPS are not simulated.</aside>
 
-    <section class="formation-slots" aria-label="Formation members">
+    <section class="formation-slots panel-section" aria-label="Formation members">
+      <div class="section-head"><h2 class="section-title">Formation · 5 slots</h2><p class="section-note">Slot 1–5 · tap a filled slot to set the evaluation target</p></div>
       <ol id="formation-slots" class="formation-strip"></ol>
       <p class="formation-hint">Drag portraits into slots 1–5, drag between slots to swap, or drop on the remove bin. Tap a portrait to add; tap a filled slot to set the target.</p>
       <div id="remove-bin" class="remove-bin" aria-label="Remove zone: drop a formation member here to remove it">Drop here to remove</div>
     </section>
 
-    <section class="roster" aria-label="Character roster">
+    <section class="roster panel-section" aria-label="Character roster">
+      <div class="section-head"><h2 class="section-title">Roster</h2><p class="section-note">Drag or tap to add a member</p></div>
       <div class="roster-filters" aria-label="Roster filters">
         <label class="search-field"><span aria-hidden="true">⌕</span><input id="roster-search" type="search" aria-label="Filter roster" placeholder="Filter roster" autocomplete="off" /></label>
         <label class="select-wrap"><span class="sr-only">Manufacturer</span><select id="roster-manufacturer" aria-label="Manufacturer"><option value="">Manufacturer: all</option></select></label>
@@ -65,11 +72,12 @@
         <div id="member-axes"></div>
       </div>
       <h2 class="effects-title">Effects on Target</h2>
-      <h3>Deterministic <small id="count-deterministic">0</small></h3>
+      <p class="bucket-legend"><span><i class="lg-det"></i>Deterministic · 確定発動</span><span><i class="lg-gated"></i>Conditional · 条件付き</span><span><i class="lg-unknown"></i>Unknown · 自動適用外</span></p>
+      <h3 class="bucket-heading" data-bucket="deterministic">Deterministic <small id="count-deterministic">0</small></h3>
       <ul id="list-deterministic" class="formation-list"></ul>
-      <h3>Conditional / gated <small id="count-gated">0</small></h3>
+      <h3 class="bucket-heading" data-bucket="gated">Conditional / gated <small id="count-gated">0</small></h3>
       <ul id="list-gated" class="formation-list"></ul>
-      <h3>Unknown <small id="count-unknown">0</small></h3>
+      <h3 class="bucket-heading" data-bucket="unknown">Unknown <small id="count-unknown">0</small></h3>
       <ul id="list-unknown" class="formation-list"></ul>
       <details id="quarantined-wrap"><summary>Quarantined (needs_review, never applied) <small id="count-quarantined">0</small></summary><ul id="list-quarantined" class="formation-list"></ul></details>
     </aside>
