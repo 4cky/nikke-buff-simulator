@@ -110,3 +110,15 @@ Skill Lv.10 text is stored and parsed as `Skill → Section/Trigger → optional
 - `parser-migration-report.json`: semantic retention and anything removed from the comparison during a parser migration.
 
 Human review decisions remain in `review-decisions.json`. Approved or edited values use `manual_override: true` and are reapplied after every automatic parse; they are never silently replaced.
+
+## UI / CSS変更時の注意
+
+`tests/data/ui-qa-v4.2-data.test.mjs` と `tests/data/treasure-data.test.mjs` は、**CSSセレクタと宣言を文字列として直接検証**しています。見た目だけの変更でもテストが落ちるため、以下に触れる場合は必ず該当テストも同時に確認してください（`npm run test:data`。実データ未取得時はスキップされます）。
+
+- `.comparison-list { overflow-x:auto ... }` — 狭幅で横スクロールする比較表の前提
+- sticky identity column — `.comparison-columns>span:first-child,.character-identity` の `position:sticky; left:0`
+- `.character-portrait` のサイズと構造 — 36px（480px以下で30px）、`img` の `object-fit:cover`、`index.html` 側の portrait → name の並び
+- 390px前後のレスポンシブ制約 — `.comparison-columns,.character-row` の `min-width`（720px / 480px以下は680px）。狭幅で1カラムに畳む変更は明示的に禁止されています
+- Treasure の avatar / border 関連 — `.formation-slot.has-treasure` は `border-color` のみで `outline` を使わず、選択枠との `outline-offset`（通常2px / 宝もの時4px）が重ならないこと
+
+いずれも「レイアウトが壊れないこと」を守るための制約です。意図的に変えたい場合は、テスト側の期待値も併せて更新し、変更理由を明記してください。

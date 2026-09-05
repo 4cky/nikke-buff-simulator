@@ -212,7 +212,11 @@ function renderRotation(){
     const current = state.rotation[index]||null;
     const options = rotationNextOptions(prefix,memberChars,effective);
     const item = document.createElement('li');
-    item.className = 'rotation-row'+(index===state.rotationIndex?' is-evaluated':'');
+    // Display only: `is-pending` marks the trailing "next step" row and
+    // `data-stage` drives the stage colour. Neither is read back as state.
+    item.className = 'rotation-row'+(index===state.rotationIndex?' is-evaluated':'')
+      +(current?'':' is-pending');
+    if(current)item.dataset.stage = String(current.stage);
     const evalLabel = document.createElement('label');
     evalLabel.className = 'rotation-eval';
     const radio = document.createElement('input');
